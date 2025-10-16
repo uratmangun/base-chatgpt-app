@@ -12,6 +12,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@base-org/account": "^2.4.0",
+    "@clerk/mcp-tools": "^0.3.1",
+    "@clerk/nextjs": "^6.33.5",
     "@farcaster/jfs": "^0.0.6",
     "@farcaster/miniapp-sdk": "^0.1.10",
     "@google/genai": "^1.25.0",
@@ -23,9 +26,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "xmcp": "^0.3.2",
-    "zod": "3.24.4",
-    "@clerk/mcp-tools": "^0.3.1",
-    "@clerk/nextjs": "^6.33.5"
+    "zod": "3.24.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

@@ -10,6 +10,6 @@ const getAppsSdkCompatibleHtml = async (baseUrl: string, path: string) => {
   return await result.text();
 };
 export default async function handler() {
-   const html = await getAppsSdkCompatibleHtml(baseURL, "/");
+   const html = await getAppsSdkCompatibleHtml(baseURL, "/home");
   return `<html>${html}</html>`;
 }
