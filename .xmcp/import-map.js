@@ -1,10 +1,14 @@
 
 export const tools = {
-"src/tools/greet.ts": () => import("../src/tools/greet.ts"),
+"src/tools/home.ts": () => import("../src/tools/home.ts"),
 };
 
 export const prompts = {
-"src/prompts/review-code.ts": () => import("../src/prompts/review-code.ts"),
+
+};
+
+export const resources = {
+"src/resources/(ui)/widget/home.ts": () => import("../src/resources/(ui)/widget/home.ts"),
 };
 
 

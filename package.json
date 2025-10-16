@@ -14,27 +14,29 @@
   "dependencies": {
     "@farcaster/jfs": "^0.0.6",
     "@farcaster/miniapp-sdk": "^0.1.10",
-    "@google/genai": "^1.17.0",
-    "dotenv": "^17.2.2",
+    "@google/genai": "^1.25.0",
+    "dotenv": "^17.2.3",
     "ethers": "^6.15.0",
     "jimp": "^1.6.0",
-    "mime": "^4.0.7",
+    "mime": "^4.1.0",
     "next": "15.3.5",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "xmcp": "^0.2.0",
-    "zod": "3.24.4"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "xmcp": "^0.3.2",
+    "zod": "3.24.4",
+    "@clerk/mcp-tools": "^0.3.1",
+    "@clerk/nextjs": "^6.33.5"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
+    "@eslint/eslintrc": "^3.3.1",
+    "@tailwindcss/postcss": "^4.1.14",
+    "@types/node": "^20.19.21",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "eslint": "^9.37.0",
     "eslint-config-next": "15.3.5",
     "swc-loader": "^0.2.6",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "tailwindcss": "^4.1.14",
+    "typescript": "^5.9.3"
   }
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import { baseURL } from "@/config/baseUrl";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -43,11 +43,11 @@ const farcasterConfig = getFarcasterConfig();
 
 export const metadata: Metadata = {
   title: {
-    default: 'Farcaster Mini App',
-    template: '%s | Farcaster Mini App',
+    default: 'Base ChatGPT App',
+    template: '%s | Base ChatGPT App',
   },
-  description: 'A Farcaster mini app built with Next.js and deployed on Cloudflare Pages',
-  keywords: ['Farcaster', 'Mini App', 'Web3', 'Social', 'Decentralized'],
+  description: 'ChatGPT-powered mini app for Base ecosystem teams and communities.',
+  keywords: ['Base', 'ChatGPT', 'AI', 'Mini App', 'Web3'],
   authors: [{ name: 'Your Name' }],
   creator: 'Your Name',
   publisher: 'Your Company',
@@ -58,17 +58,17 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   openGraph: {
-    title: 'Farcaster Mini App',
-    description: 'A Farcaster mini app built with Next.js',
+    title: 'Base ChatGPT App',
+    description: 'ChatGPT-powered experiences designed for the Base ecosystem.',
     url: '/',
-    siteName: 'Farcaster Mini App',
+    siteName: 'Base ChatGPT App',
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Farcaster Mini App',
-    description: 'A Farcaster mini app built with Next.js',
+    title: 'Base ChatGPT App',
+    description: 'ChatGPT-powered experiences designed for the Base ecosystem.',
   },
   robots: {
     index: true,
@@ -82,12 +82,12 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
     apple: '/apple-touch-icon.png',
   },
   other: {
-    // Farcaster Mini App metadata for sharing
+    // Base ChatGPT App metadata for sharing
     'fc:miniapp': JSON.stringify({
       version: '1',
       imageUrl: farcasterConfig.miniapp.imageUrl,
@@ -126,12 +126,138 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+   <html lang="en" suppressHydrationWarning>
+      <head>
+        <NextChatSDKBootstrap baseUrl={baseURL} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
       </body>
     </html>
+  );
+}
+function NextChatSDKBootstrap({ baseUrl }: { baseUrl: string }) {
+  return (
+    <>
+      <base href={baseUrl}></base>
+      <script>{`window.innerBaseUrl = ${JSON.stringify(baseUrl)}`}</script>
+      <script>{`window.__isChatGptApp = typeof window.openai !== "undefined";`}</script>
+      <script>
+        {"(" +
+          (() => {
+            const baseUrl = window.innerBaseUrl;
+            const htmlElement = document.documentElement;
+            const observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                if (
+                  mutation.type === "attributes" &&
+                  mutation.target === htmlElement
+                ) {
+                  const attrName = mutation.attributeName;
+                  if (attrName && attrName !== "suppresshydrationwarning") {
+                    htmlElement.removeAttribute(attrName);
+                  }
+                }
+              });
+            });
+            observer.observe(htmlElement, {
+              attributes: true,
+              attributeOldValue: true,
+            });
+
+            const originalReplaceState = history.replaceState;
+            history.replaceState = (s, unused, url) => {
+              const u = new URL(url ?? "", window.location.href);
+              const href = u.pathname + u.search + u.hash;
+              originalReplaceState.call(history, unused, href);
+            };
+
+            const originalPushState = history.pushState;
+            history.pushState = (s, unused, url) => {
+              const u = new URL(url ?? "", window.location.href);
+              const href = u.pathname + u.search + u.hash;
+              originalPushState.call(history, unused, href);
+            };
+
+            const appOrigin = new URL(baseUrl).origin;
+            const isInIframe = window.self !== window.top;
+
+            window.addEventListener(
+              "click",
+              (e) => {
+                const a = (e?.target as HTMLElement)?.closest("a");
+                if (!a || !a.href) return;
+                const url = new URL(a.href, window.location.href);
+                if (
+                  url.origin !== window.location.origin &&
+                  url.origin != appOrigin
+                ) {
+                  try {
+                    if (window.openai) {
+                      window.openai?.openExternal({ href: a.href });
+                      e.preventDefault();
+                    }
+                  } catch {
+                    console.warn(
+                      "openExternal failed, likely not in OpenAI client"
+                    );
+                  }
+                }
+              },
+              true
+            );
+
+            if (isInIframe && window.location.origin !== appOrigin) {
+              const originalFetch = window.fetch;
+
+              window.fetch = (input: URL | RequestInfo, init?: RequestInit) => {
+                let url: URL;
+                if (typeof input === "string" || input instanceof URL) {
+                  url = new URL(input, window.location.href);
+                } else {
+                  url = new URL(input.url, window.location.href);
+                }
+
+                if (url.origin === appOrigin) {
+                  if (typeof input === "string" || input instanceof URL) {
+                    input = url.toString();
+                  } else {
+                    input = new Request(url.toString(), input);
+                  }
+
+                  return originalFetch.call(window, input, {
+                    ...init,
+                    mode: "cors",
+                  });
+                }
+
+                if (url.origin === window.location.origin) {
+                  const newUrl = new URL(baseUrl);
+                  newUrl.pathname = url.pathname;
+                  newUrl.search = url.search;
+                  newUrl.hash = url.hash;
+                  url = newUrl;
+
+                  if (typeof input === "string" || input instanceof URL) {
+                    input = url.toString();
+                  } else {
+                    input = new Request(url.toString(), input);
+                  }
+
+                  return originalFetch.call(window, input, {
+                    ...init,
+                    mode: "cors",
+                  });
+                }
+
+                return originalFetch.call(window, input, init);
+              };
+            }
+          }).toString() +
+          ")()"}
+      </script>
+    </>
   );
 }
