@@ -43,8 +43,8 @@ const farcasterConfig = getFarcasterConfig();
 
 export const metadata: Metadata = {
   title: {
-    default: 'Base ChatGPT App',
-    template: '%s | Base ChatGPT App',
+    default: 'base sub account spend permission',
+    template: '%s | base sub account spend permission',
   },
   description: 'ChatGPT-powered mini app for Base ecosystem teams and communities.',
   keywords: ['Base', 'ChatGPT', 'AI', 'Mini App', 'Web3'],
@@ -58,16 +58,16 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   openGraph: {
-    title: 'Base ChatGPT App',
+    title: 'base sub account spend permission',
     description: 'ChatGPT-powered experiences designed for the Base ecosystem.',
     url: '/',
-    siteName: 'Base ChatGPT App',
+    siteName: 'base sub account spend permission',
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Base ChatGPT App',
+    title: 'base sub account spend permission',
     description: 'ChatGPT-powered experiences designed for the Base ecosystem.',
   },
   robots: {
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   other: {
-    // Base ChatGPT App metadata for sharing
+    // base sub account spend permission metadata for sharing
     'fc:miniapp': JSON.stringify({
       version: '1',
       imageUrl: farcasterConfig.miniapp.imageUrl,
